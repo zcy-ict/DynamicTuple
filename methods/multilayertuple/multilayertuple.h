@@ -3,6 +3,10 @@
 
 #include "../../elementary.h"
 #include "mtuple.h"
+#include "../dynamictuple/dynamictuple-dims.h"
+
+#define MULTILATERTUPLE_TYPE 1
+#define DYNAMICTUPLEDIMS_TYPE 2
 
 using namespace std;
 

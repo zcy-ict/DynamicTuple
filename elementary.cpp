@@ -148,3 +148,21 @@ uint64_t GetAvgTime(vector<uint64_t> &lookup_times) {
 int Popcnt(uint64_t num) {
 	return __builtin_popcountll(num);
 }
+
+void ProgramState::AccessClear() {
+    access_tuples.ClearNum();
+    access_tables.ClearNum();
+    access_nodes.ClearNum();
+    access_rules.ClearNum();
+
+}
+void ProgramState::AccessCal() {
+	max_access_all = max(max_access_all, access_tuples.num + access_tables.num + access_nodes.num + access_rules.num);
+	max_access_tuple_node_rule = max(max_access_tuple_node_rule, access_tuples.num + access_nodes.num + access_rules.num);
+	max_access_node_rule = max(max_access_node_rule, access_nodes.num + access_rules.num);
+
+    access_tuples.Update();
+    access_tables.Update();
+    access_nodes.Update();
+    access_rules.Update();
+}

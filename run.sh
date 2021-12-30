@@ -43,12 +43,17 @@ RunMethod() {
             data=${data_size}_${data_type}
             echo "${data}" >> ${output}
 
-            for prefix_dims_num in 5 # 2
+            RunProgram    DynamicTuple_Demo     DynamicTuple_Demo     ${data} --prefix_dims_num 2
+            RunProgram    DynamicTuple_Basic    DynamicTuple_Basic    ${data} --prefix_dims_num 2
+            RunProgram    DynamicTuple          DynamicTuple          ${data} --prefix_dims_num 2
+
+            for prefix_dims_num in 2 5
             do
-                RunProgram    DimTSS             DimTSS             ${data} --prefix_dims_num ${prefix_dims_num}
-                RunProgram    TupleMerge         TupleMerge         ${data} --prefix_dims_num ${prefix_dims_num}
-                RunProgram    PartitionSort      PartitionSort      ${data} --prefix_dims_num ${prefix_dims_num}
-                RunProgram    MultilayerTuple    MultilayerTuple    ${data} --prefix_dims_num ${prefix_dims_num}
+                RunProgram    DimTSS                DimTSS                ${data} --prefix_dims_num ${prefix_dims_num}
+                RunProgram    TupleMerge            TupleMerge            ${data} --prefix_dims_num ${prefix_dims_num}
+                RunProgram    PartitionSort         PartitionSort         ${data} --prefix_dims_num ${prefix_dims_num}
+                RunProgram    MultilayerTuple       MultilayerTuple       ${data} --prefix_dims_num ${prefix_dims_num}
+                RunProgram    DynamicTuple_Dims     DynamicTuple_Dims     ${data} --prefix_dims_num ${prefix_dims_num}
 
             done
         done

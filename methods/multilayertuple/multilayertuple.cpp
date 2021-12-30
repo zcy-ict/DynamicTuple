@@ -9,6 +9,9 @@ int max_layers_num = 5;  // the max_prelix_len 32 = 2^5
 uint32_t create_next_layer_rules_num = 20;
 uint32_t delete_next_layer_rules_num = create_next_layer_rules_num / 2;
 
+int reduce_prefix_type = MULTILATERTUPLE_TYPE; 
+DimsRange dims_range;
+
 
 int MultilayerTuple::Init(uint32_t _tuple_layer, bool _start_tuple_layer) {
     tuple_layer = _tuple_layer;
@@ -26,6 +29,9 @@ int MultilayerTuple::Create(vector<Rule*> &rules, bool insert) {
                 tuple_layer, prefix_dims_num);
     	exit(1);
     }
+    
+    if (reduce_prefix_type == DYNAMICTUPLEDIMS_TYPE)
+        dims_range = GetDimRange(rules, prefix_dims_num);
 
     tuples_num = 0;
     max_tuples_num = 16;
@@ -72,10 +78,17 @@ void MultilayerTuple::SortTuples() {
 
 uint32_t MultilayerTuple::GetReducedPrefix(uint32_t *prefix_len, Rule *rule) {
     uint32_t prefix_pair = 0;
-    for (int i = 0; i < prefix_dims_num; ++i) {
-        int step = max(1, max_prefix_len[i] >> tuple_layer);
-        prefix_len[i] = rule->prefix_len[i] - rule->prefix_len[i] % step;
-        prefix_pair = prefix_pair << 6 | prefix_len[i];
+    if (reduce_prefix_type == 1) {
+        for (int i = 0; i < prefix_dims_num; ++i) {
+            int step = max(1, max_prefix_len[i] >> tuple_layer);
+            prefix_len[i] = rule->prefix_len[i] - rule->prefix_len[i] % step;
+            prefix_pair = prefix_pair << 6 | prefix_len[i];
+        }
+    } else if (reduce_prefix_type == 2) {
+        for (int i = 0; i < prefix_dims_num; ++i) {
+            prefix_len[i] = dims_range.reduced[i][rule->prefix_len[i]];
+            prefix_pair = prefix_pair << 6 | prefix_len[i];
+        }
     }
     return prefix_pair;
 }
@@ -181,10 +194,7 @@ int MultilayerTuple::Lookup(Trace *trace, int priority) {
 
 int MultilayerTuple::LookupAccess(Trace *trace, int priority, Rule *ans_rule, ProgramState *program_state) { 
     if (start_tuple_layer) {
-        program_state->access_tuples.ClearNum();
-        program_state->access_tables.ClearNum();
-        program_state->access_nodes.ClearNum();
-        program_state->access_rules.ClearNum();
+        program_state->AccessClear();
     }
     uint32_t keys[5];
     for (int i = 0; i < tuples_num; ++i) {
@@ -229,10 +239,7 @@ int MultilayerTuple::LookupAccess(Trace *trace, int priority, Rule *ans_rule, Pr
     }
     // printf("lookup layer %d priority %d\n", tuple_layer, priority);
     if (start_tuple_layer) {
-        program_state->access_tuples.Update();
-        program_state->access_tables.Update();
-        program_state->access_nodes.Update();
-        program_state->access_rules.Update();
+        program_state->AccessCal();
     }
     return priority;
 }

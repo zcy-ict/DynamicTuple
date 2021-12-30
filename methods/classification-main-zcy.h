@@ -4,6 +4,7 @@
 #include "../elementary.h"
 #include "../io/io.h"
 #include "../methods/multilayertuple/multilayertuple.h"
+#include "../methods/dynamictuple/dynamictuple.h"
 
 using namespace std;
 

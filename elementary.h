@@ -90,9 +90,24 @@ struct ProgramState {
 	AccessNum access_nodes;
 	AccessNum access_rules;
 
+	int max_access_all;
+	int max_access_tuple_node_rule;
+	int max_access_node_rule;
 
-	int match_real_rules_sum;
-	int match_rules_sum;
+
+	int low_priority_matching_access;
+	int high_priority_matching_access;
+	
+	int low_priority_collision_access; 
+	int high_priority_collision_access;
+
+	int low_priority_rule_access; 
+	int high_priority_rule_access;
+
+	double dt_time;  // S
+
+	void AccessClear();
+	void AccessCal();
 };
 
 struct Rule {

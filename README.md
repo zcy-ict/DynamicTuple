@@ -1,8 +1,7 @@
 # DynamicTuple: The Dynamic Adaptive Tuple for High-performance Packet Classification
-# MultilayerTuple: A General, Scalable and High-performance Packet Classification Algorithm for Software Defined Network System
 
 ## Introduction
-The code is for the paper on IFIP Networking 2021
+The code is for the paper on Compuer Networks 2022
 
 If there are any problems or bugs, welcome to discuss with me
 
@@ -47,8 +46,16 @@ g++ 5.4.0
 
 **MultilayerTuple :**           (My Work)            reduce prefix lengths with multiple layers
 
+**DynammicTuple_Demo :**        (My Work)            the demo to show the access numbers of each structure, need to define TUPLEINFO in dynamictuple-ranges.h
+
+**DynammicTuple_Basic :**       (My Work)            apply 2D dynamic programming to reduce the prefix lengths of src and dst IP
+
+**DynammicTuple :**             (My Work)            based on DynammicTuple_Basic, use the port hash table to accelerate
+
+**DynammicTuple_Dims :**        (My Work)            based on the code of MultilayerTuple, reduce the prefix lengths for multiple dims
+
 
 ## Sample
 sh run.sh
 
-make && ./main --run_mode classification --method_name MultilayerTuple --rules_file data/10K_acl1_rules --traces_file data/10K_acl1_traces --rules_shuffle 1 --lookup_round 10 --force_test 0 --print_mode 0 --prefix_dims_num 5
+make && ./main --run_mode classification --method_name DynamicTuple --rules_file data/10K_acl1_rules --traces_file data/10K_acl1_traces --rules_shuffle 1 --lookup_round 10 --force_test 0 --print_mode 0 --prefix_dims_num 2
